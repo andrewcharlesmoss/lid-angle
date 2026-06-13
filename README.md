@@ -10,6 +10,12 @@ It reads the built-in lid angle sensor through macOS IOKit HID feature reports:
 - Usage: `0x008A`
 - Feature Report ID: `1`
 
+## Download
+
+Download the latest `lid-angle-v1.0.0.zip` file from the GitHub Releases page, unzip it, and move `Lid Angle.app` to your Applications folder.
+
+macOS may show a warning that Apple could not verify the app. This is expected because this release is not notarised by Apple. To open it, go to System Settings > Privacy & Security and choose Open Anyway for `Lid Angle.app`, or control-click the app and choose Open.
+
 ## Run
 
 ```sh
