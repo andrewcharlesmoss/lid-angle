@@ -12,12 +12,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         controller = LidAngleViewController()
         window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 560, height: 430),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            styleMask: [.titled, .closable, .miniaturizable],
             backing: .buffered,
             defer: false
         )
         window.title = "Lid Angle"
-        window.minSize = NSSize(width: 500, height: 390)
+        window.minSize = NSSize(width: 560, height: 430)
+        window.maxSize = NSSize(width: 560, height: 430)
         window.contentViewController = controller
         window.centreOnMainScreen()
         window.makeKeyAndOrderFront(nil)
@@ -45,15 +46,15 @@ private extension NSWindow {
 
 final class LidAngleViewController: NSViewController {
     private enum DisplayMode: Int {
-        case hinge = 0
-        case fromFlat = 1
+        case fromFlat = 0
+        case hinge = 1
     }
 
     private let reader = LidAngleReader()
     private let titleLabel = NSTextField(labelWithString: "MacBook Pro Lid Angle")
     private let controlRow = NSStackView()
     private let optionsRow = NSStackView()
-    private let modeControl = NSSegmentedControl(labels: ["Closed", "Flat"], trackingMode: .selectOne, target: nil, action: nil)
+    private let modeControl = NSSegmentedControl(labels: ["Flat", "Closed"], trackingMode: .selectOne, target: nil, action: nil)
     private let menuBarCheckbox = NSButton(checkboxWithTitle: "Menu Bar", target: nil, action: nil)
     private let creakCheckbox = NSButton(checkboxWithTitle: "Sound", target: nil, action: nil)
     private let angleLabel = NSTextField(labelWithString: "--")
@@ -84,7 +85,7 @@ final class LidAngleViewController: NSViewController {
         titleLabel.alignment = .center
         titleLabel.textColor = .labelColor
 
-        modeControl.selectedSegment = DisplayMode.hinge.rawValue
+        modeControl.selectedSegment = DisplayMode.fromFlat.rawValue
         modeControl.target = self
         modeControl.action = #selector(displayModeChanged)
         modeControl.setImage(ModeIcon.closed, forSegment: DisplayMode.hinge.rawValue)
@@ -170,7 +171,7 @@ final class LidAngleViewController: NSViewController {
             modeWidthConstraint,
 
             visualiserTopConstraint,
-            visualiser.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            visualiser.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -18),
             visualiser.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -48),
             visualiserWidthConstraint,
             visualiserHeightConstraint,
@@ -273,16 +274,16 @@ final class LidAngleViewController: NSViewController {
             return
         }
 
-        let mode = DisplayMode(rawValue: modeControl.selectedSegment) ?? .hinge
+        let mode = DisplayMode(rawValue: modeControl.selectedSegment) ?? .fromFlat
         switch mode {
         case .hinge:
             angleLabel.stringValue = "\(sensorAngle)°"
-            statusLabel.stringValue = "0° is closed; larger numbers mean the lid is more open."
-            updateMenuBarItem(title: "\(sensorAngle)°", tooltip: "0 degrees is closed.")
+            statusLabel.stringValue = "0° is closed.\nLarger numbers mean the lid is more open."
+            updateMenuBarItem(title: "Closed \(sensorAngle)°", tooltip: "0 degrees is closed.")
         case .fromFlat:
             let fromFlat = max(0, 180 - sensorAngle)
             angleLabel.stringValue = "\(fromFlat)°"
-            statusLabel.stringValue = "0° is fully open; larger numbers mean the lid is closing."
+            statusLabel.stringValue = "0° is fully open.\nLarger numbers mean the lid is closing."
             updateMenuBarItem(title: "Flat \(fromFlat)°", tooltip: "0 degrees is fully open.")
         }
 
@@ -389,12 +390,12 @@ final class LidAngleViewController: NSViewController {
 
         titleTopConstraint.constant = 10 * scale
         modeTopConstraint.constant = 12 * scale
-        visualiserTopConstraint.constant = 20 * scale
-        angleTopConstraint.constant = 14 * scale
+        visualiserTopConstraint.constant = -8 * scale
+        angleTopConstraint.constant = 8 * scale
         statusTopConstraint.constant = 16 * scale
         modeWidthConstraint.constant = 214
         visualiserWidthConstraint.constant = min(max(width * 0.72, 235), 560)
-        visualiserHeightConstraint.constant = min(max(width * 0.48, 205), 300)
+        visualiserHeightConstraint.constant = min(max(width * 0.38, 168), 225)
         visualiser.strokeScale = scale
     }
 }
@@ -416,14 +417,27 @@ final class LidVisualiserView: NSView {
         let lineWidth = max(9, 12 * strokeScale)
         let baseHeight = max(12, 16 * strokeScale)
         let hingeRadius = max(6, 7 * strokeScale)
-        let hingeInset = max(bounds.width * 0.18, 74 * strokeScale)
+        let screenLength = max(90 * strokeScale, min(bounds.height * 0.82, bounds.width * 0.46))
+        let hingeInset = min(
+            max(screenLength * 0.9 + lineWidth, bounds.width * 0.28),
+            bounds.width - screenLength - lineWidth
+        )
         let hinge = CGPoint(
             x: bounds.minX + hingeInset,
-            y: bounds.maxY - max(16, 18 * strokeScale)
+            y: bounds.maxY - max(24, 28 * strokeScale)
         )
-        let baseWidth = bounds.width - max(30, 34 * strokeScale)
+        let radians = angle * .pi / 180
+        let xDirection = cos(radians)
+        let yDirection = sin(radians)
+        let end = CGPoint(
+            x: hinge.x + xDirection * screenLength,
+            y: hinge.y - yDirection * screenLength
+        )
+
+        let baseTail = max(6, 8 * strokeScale)
+        let baseWidth = min(screenLength + baseTail, bounds.maxX - hinge.x - lineWidth * 0.35)
         let baseRect = NSRect(
-            x: hinge.x - max(18, 22 * strokeScale),
+            x: hinge.x,
             y: hinge.y,
             width: baseWidth,
             height: baseHeight
@@ -441,27 +455,6 @@ final class LidVisualiserView: NSView {
                 height: hingeRadius * 2
             )
         ).fill()
-
-        let radians = angle * .pi / 180
-        let xDirection = cos(radians)
-        let yDirection = sin(radians)
-        let horizontalLimit: CGFloat
-        if abs(xDirection) < 0.01 {
-            horizontalLimit = bounds.width
-        } else if xDirection > 0 {
-            horizontalLimit = (bounds.maxX - hinge.x - lineWidth) / xDirection
-        } else {
-            horizontalLimit = (hinge.x - bounds.minX - lineWidth) / abs(xDirection)
-        }
-        let verticalLimit = yDirection > 0.01
-            ? (hinge.y - bounds.minY - lineWidth) / yDirection
-            : bounds.height
-        let desiredLength = min(bounds.height * 0.96, bounds.width * 0.56)
-        let screenLength = max(90 * strokeScale, min(desiredLength, horizontalLimit, verticalLimit))
-        let end = CGPoint(
-            x: hinge.x + xDirection * screenLength,
-            y: hinge.y - yDirection * screenLength
-        )
 
         let lidPath = NSBezierPath()
         lidPath.lineWidth = lineWidth
