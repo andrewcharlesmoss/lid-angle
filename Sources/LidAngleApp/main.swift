@@ -51,14 +51,13 @@ final class LidAngleViewController: NSViewController {
     }
 
     private let reader = LidAngleReader()
-    private let titleLabel = NSTextField(labelWithString: "MacBook Pro Lid Angle")
+    private let titleLabel = NSTextField(labelWithString: "MacBook Lid Angle")
     private let controlRow = NSStackView()
     private let optionsRow = NSStackView()
     private let modeControl = NSSegmentedControl(labels: ["Flat", "Closed"], trackingMode: .selectOne, target: nil, action: nil)
     private let menuBarCheckbox = NSButton(checkboxWithTitle: "Menu Bar", target: nil, action: nil)
     private let creakCheckbox = NSButton(checkboxWithTitle: "Sound", target: nil, action: nil)
     private let angleLabel = NSTextField(labelWithString: "--")
-    private let unitLabel = NSTextField(labelWithString: "degrees")
     private let statusLabel = NSTextField(labelWithString: "Looking for the lid angle sensor...")
     private let visualiser = LidVisualiserView()
     private var statusItem: NSStatusItem?
@@ -127,10 +126,6 @@ final class LidAngleViewController: NSViewController {
         angleLabel.textColor = .labelColor
         angleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
-        unitLabel.font = .systemFont(ofSize: 14, weight: .medium)
-        unitLabel.alignment = .center
-        unitLabel.textColor = .secondaryLabelColor
-
         statusLabel.font = .systemFont(ofSize: 13, weight: .regular)
         statusLabel.alignment = .center
         statusLabel.textColor = .secondaryLabelColor
@@ -142,14 +137,12 @@ final class LidAngleViewController: NSViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         controlRow.translatesAutoresizingMaskIntoConstraints = false
         angleLabel.translatesAutoresizingMaskIntoConstraints = false
-        unitLabel.translatesAutoresizingMaskIntoConstraints = false
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(titleLabel)
         view.addSubview(controlRow)
         view.addSubview(visualiser)
         view.addSubview(angleLabel)
-        view.addSubview(unitLabel)
         view.addSubview(statusLabel)
 
         titleTopConstraint = titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 14)
@@ -159,7 +152,7 @@ final class LidAngleViewController: NSViewController {
         visualiserWidthConstraint = visualiser.widthAnchor.constraint(equalToConstant: 260)
         visualiserHeightConstraint = visualiser.heightAnchor.constraint(equalToConstant: 122)
         angleTopConstraint = angleLabel.topAnchor.constraint(equalTo: visualiser.bottomAnchor, constant: 16)
-        statusTopConstraint = statusLabel.topAnchor.constraint(equalTo: unitLabel.bottomAnchor, constant: 18)
+        statusTopConstraint = statusLabel.topAnchor.constraint(equalTo: angleLabel.bottomAnchor, constant: 14)
 
         NSLayoutConstraint.activate([
             titleTopConstraint,
@@ -179,10 +172,6 @@ final class LidAngleViewController: NSViewController {
             angleTopConstraint,
             angleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             angleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-
-            unitLabel.topAnchor.constraint(equalTo: angleLabel.bottomAnchor, constant: -4),
-            unitLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            unitLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
 
             statusTopConstraint,
             statusLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
@@ -246,7 +235,6 @@ final class LidAngleViewController: NSViewController {
             if angle == 1 {
                 lastSensorAngle = nil
                 angleLabel.stringValue = "Docked"
-                unitLabel.stringValue = ""
                 statusLabel.stringValue = "The sensor reports docked mode."
                 visualiser.angle = 0
                 updateMenuBarItem(title: "Docked", tooltip: "The lid angle sensor reports docked mode.")
@@ -262,7 +250,6 @@ final class LidAngleViewController: NSViewController {
         case .failure(let error):
             lastSensorAngle = nil
             angleLabel.stringValue = "--"
-            unitLabel.stringValue = "degrees"
             statusLabel.stringValue = error.userMessage
             visualiser.angle = 105
             updateMenuBarItem(title: "--°", tooltip: error.userMessage)
@@ -287,7 +274,6 @@ final class LidAngleViewController: NSViewController {
             updateMenuBarItem(title: "Flat \(fromFlat)°", tooltip: "0 degrees is fully open.")
         }
 
-        unitLabel.stringValue = "degrees"
     }
 
     private func loadCreakSoundIfNeeded() {
@@ -382,7 +368,6 @@ final class LidAngleViewController: NSViewController {
 
         titleLabel.font = .systemFont(ofSize: 20 * scale, weight: .semibold)
         angleLabel.font = .monospacedDigitSystemFont(ofSize: 72 * scale, weight: .bold)
-        unitLabel.font = .systemFont(ofSize: 14 * scale, weight: .medium)
         statusLabel.font = .systemFont(ofSize: 13 * scale, weight: .regular)
         modeControl.font = .systemFont(ofSize: 12 * scale, weight: .medium)
         menuBarCheckbox.font = .systemFont(ofSize: 12 * scale, weight: .medium)
@@ -549,7 +534,7 @@ enum LidAngleReadError: Error {
     var userMessage: String {
         switch self {
         case .noSensor:
-            "No compatible lid angle sensor was found. This usually needs a 2019 or newer MacBook Pro, or a newer Apple Silicon MacBook with the HID sensor."
+            "No compatible lid angle sensor was found. This requires a MacBook that exposes the compatible HID lid angle sensor."
         case .openFailed:
             "The lid angle sensor was found, but macOS would not let this app open it."
         case .readFailed:
