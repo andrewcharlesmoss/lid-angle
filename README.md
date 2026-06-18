@@ -39,6 +39,12 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 
 ## Changelog
 
+### 1.0.3
+
+- Adds a `0° Reference` label to clarify what the display selector controls.
+- Renames Flat to Fully Open for clearer wording.
+- Shows `Open` before the angle in the menu bar when using Fully Open mode.
+
 ### 1.0.2
 
 - Renames the window title to MacBook Lid Angle to include compatible MacBook Air models.

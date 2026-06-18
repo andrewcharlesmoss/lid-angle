@@ -52,9 +52,10 @@ final class LidAngleViewController: NSViewController {
 
     private let reader = LidAngleReader()
     private let titleLabel = NSTextField(labelWithString: "MacBook Lid Angle")
+    private let referenceLabel = NSTextField(labelWithString: "0° Reference")
     private let controlRow = NSStackView()
     private let optionsRow = NSStackView()
-    private let modeControl = NSSegmentedControl(labels: ["Flat", "Closed"], trackingMode: .selectOne, target: nil, action: nil)
+    private let modeControl = NSSegmentedControl(labels: ["Fully Open", "Closed"], trackingMode: .selectOne, target: nil, action: nil)
     private let menuBarCheckbox = NSButton(checkboxWithTitle: "Menu Bar", target: nil, action: nil)
     private let creakCheckbox = NSButton(checkboxWithTitle: "Sound", target: nil, action: nil)
     private let angleLabel = NSTextField(labelWithString: "--")
@@ -84,6 +85,10 @@ final class LidAngleViewController: NSViewController {
         titleLabel.alignment = .center
         titleLabel.textColor = .labelColor
 
+        referenceLabel.font = .systemFont(ofSize: 11, weight: .medium)
+        referenceLabel.alignment = .center
+        referenceLabel.textColor = .secondaryLabelColor
+
         modeControl.selectedSegment = DisplayMode.fromFlat.rawValue
         modeControl.target = self
         modeControl.action = #selector(displayModeChanged)
@@ -93,8 +98,8 @@ final class LidAngleViewController: NSViewController {
         modeControl.setImageScaling(.scaleProportionallyDown, forSegment: DisplayMode.fromFlat.rawValue)
         modeControl.setToolTip("Show 0 degrees when the lid is closed", forSegment: DisplayMode.hinge.rawValue)
         modeControl.setToolTip("Show 0 degrees when the lid is fully open", forSegment: DisplayMode.fromFlat.rawValue)
-        modeControl.setWidth(118, forSegment: DisplayMode.hinge.rawValue)
-        modeControl.setWidth(96, forSegment: DisplayMode.fromFlat.rawValue)
+        modeControl.setWidth(112, forSegment: DisplayMode.hinge.rawValue)
+        modeControl.setWidth(138, forSegment: DisplayMode.fromFlat.rawValue)
         modeControl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         menuBarCheckbox.target = self
@@ -116,8 +121,9 @@ final class LidAngleViewController: NSViewController {
 
         controlRow.orientation = .vertical
         controlRow.alignment = .centerX
-        controlRow.spacing = 8
+        controlRow.spacing = 6
         controlRow.distribution = .gravityAreas
+        controlRow.addArrangedSubview(referenceLabel)
         controlRow.addArrangedSubview(modeControl)
         controlRow.addArrangedSubview(optionsRow)
 
@@ -146,8 +152,8 @@ final class LidAngleViewController: NSViewController {
         view.addSubview(statusLabel)
 
         titleTopConstraint = titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 14)
-        modeTopConstraint = controlRow.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12)
-        modeWidthConstraint = modeControl.widthAnchor.constraint(equalToConstant: 210)
+        modeTopConstraint = controlRow.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8)
+        modeWidthConstraint = modeControl.widthAnchor.constraint(equalToConstant: 250)
         visualiserTopConstraint = visualiser.topAnchor.constraint(equalTo: controlRow.bottomAnchor, constant: 20)
         visualiserWidthConstraint = visualiser.widthAnchor.constraint(equalToConstant: 260)
         visualiserHeightConstraint = visualiser.heightAnchor.constraint(equalToConstant: 122)
@@ -271,7 +277,7 @@ final class LidAngleViewController: NSViewController {
             let fromFlat = max(0, 180 - sensorAngle)
             angleLabel.stringValue = "\(fromFlat)°"
             statusLabel.stringValue = "0° is fully open.\nLarger numbers mean the lid is closing."
-            updateMenuBarItem(title: "Flat \(fromFlat)°", tooltip: "0 degrees is fully open.")
+            updateMenuBarItem(title: "Open \(fromFlat)°", tooltip: "0 degrees is fully open.")
         }
 
     }
@@ -369,16 +375,17 @@ final class LidAngleViewController: NSViewController {
         titleLabel.font = .systemFont(ofSize: 20 * scale, weight: .semibold)
         angleLabel.font = .monospacedDigitSystemFont(ofSize: 72 * scale, weight: .bold)
         statusLabel.font = .systemFont(ofSize: 13 * scale, weight: .regular)
+        referenceLabel.font = .systemFont(ofSize: 11 * scale, weight: .medium)
         modeControl.font = .systemFont(ofSize: 12 * scale, weight: .medium)
         menuBarCheckbox.font = .systemFont(ofSize: 12 * scale, weight: .medium)
         creakCheckbox.font = .systemFont(ofSize: 12 * scale, weight: .medium)
 
         titleTopConstraint.constant = 10 * scale
-        modeTopConstraint.constant = 12 * scale
-        visualiserTopConstraint.constant = -8 * scale
+        modeTopConstraint.constant = 8 * scale
+        visualiserTopConstraint.constant = -14 * scale
         angleTopConstraint.constant = 8 * scale
         statusTopConstraint.constant = 16 * scale
-        modeWidthConstraint.constant = 214
+        modeWidthConstraint.constant = 250
         visualiserWidthConstraint.constant = min(max(width * 0.72, 235), 560)
         visualiserHeightConstraint.constant = min(max(width * 0.38, 168), 225)
         visualiser.strokeScale = scale
@@ -394,6 +401,10 @@ final class LidVisualiserView: NSView {
     }
 
     override var isFlipped: Bool { true }
+
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        nil
+    }
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
