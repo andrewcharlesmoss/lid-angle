@@ -76,14 +76,6 @@ func drawIcon(size: Int) -> NSImage {
 
     let hinge = NSPoint(x: card.minX + 270 * scale, y: card.minY + 205 * scale)
 
-    NSColor(calibratedWhite: 0, alpha: 0.13).setFill()
-    let baseShadow = NSBezierPath()
-    baseShadow.lineWidth = max(44 * scale, size <= 32 ? 2 : 2.8)
-    baseShadow.lineCapStyle = .round
-    baseShadow.move(to: NSPoint(x: hinge.x - 8 * scale, y: hinge.y - 10 * scale))
-    baseShadow.line(to: NSPoint(x: card.maxX - 96 * scale, y: hinge.y - 10 * scale))
-    baseShadow.stroke()
-
     let basePath = NSBezierPath()
     basePath.lineWidth = max(40 * scale, size <= 32 ? 1.8 : 2.6)
     basePath.lineCapStyle = .round
@@ -92,6 +84,18 @@ func drawIcon(size: Int) -> NSImage {
     basePath.line(to: NSPoint(x: card.maxX - 82 * scale, y: hinge.y))
     basePath.stroke()
 
+    let arc = NSBezierPath()
+    arc.move(to: NSPoint(x: hinge.x - 188 * scale, y: hinge.y - 30 * scale))
+    arc.curve(
+        to: NSPoint(x: hinge.x - 104 * scale, y: hinge.y + 134 * scale),
+        controlPoint1: NSPoint(x: hinge.x - 192 * scale, y: hinge.y + 32 * scale),
+        controlPoint2: NSPoint(x: hinge.x - 152 * scale, y: hinge.y + 112 * scale)
+    )
+    arc.lineWidth = max(15 * scale, size <= 32 ? 1.3 : 1.8)
+    arc.lineCapStyle = .round
+    NSColor.controlAccentColor.withAlphaComponent(0.92).setStroke()
+    arc.stroke()
+
     let lidPath = NSBezierPath()
     lidPath.lineWidth = max(54 * scale, size <= 32 ? 2.8 : 3.6)
     lidPath.lineCapStyle = .round
@@ -99,27 +103,6 @@ func drawIcon(size: Int) -> NSImage {
     lidPath.move(to: hinge)
     lidPath.line(to: NSPoint(x: hinge.x - 168 * scale, y: hinge.y + 300 * scale))
     lidPath.stroke()
-
-    let lidHighlight = NSBezierPath()
-    lidHighlight.lineWidth = max(11 * scale, size <= 32 ? 1 : 1.4)
-    lidHighlight.lineCapStyle = .round
-    NSColor.white.withAlphaComponent(0.34).setStroke()
-    lidHighlight.move(to: NSPoint(x: hinge.x - 38 * scale, y: hinge.y + 72 * scale))
-    lidHighlight.line(to: NSPoint(x: hinge.x - 132 * scale, y: hinge.y + 234 * scale))
-    lidHighlight.stroke()
-
-    let arc = NSBezierPath()
-    arc.appendArc(
-        withCenter: hinge,
-        radius: 198 * scale,
-        startAngle: 28,
-        endAngle: 118,
-        clockwise: false
-    )
-    arc.lineWidth = max(15 * scale, size <= 32 ? 1.3 : 1.8)
-    arc.lineCapStyle = .round
-    NSColor.controlAccentColor.withAlphaComponent(0.92).setStroke()
-    arc.stroke()
 
     NSColor.controlAccentColor.setFill()
     NSBezierPath(

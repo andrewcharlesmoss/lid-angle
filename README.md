@@ -39,6 +39,10 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 
 ## Changelog
 
+### 1.0.4
+
+- Updates the app icon so the blue reference curve better matches the default Fully Open mode.
+
 ### 1.0.3
 
 - Adds a `0° Reference` label to clarify what the display selector controls.
