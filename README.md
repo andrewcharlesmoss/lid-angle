@@ -45,7 +45,7 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 
 ## Changelog
 
-### 1.0.5
+### 1.0.5 - 2026-07-01
 
 - Fixes the menu bar Show Lid Angle action after the main window is closed.
 - Keeps the main window available after closing it, so it can be reopened from the menu bar.
@@ -54,23 +54,23 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 - Centres the hinge dot in the Fully Open selector icon.
 - Shows the copyright notice in the About panel.
 
-### 1.0.4
+### 1.0.4 - 2026-06-24
 
 - Updates the app icon so the blue reference curve better matches the default Fully Open mode.
 
-### 1.0.3
+### 1.0.3 - 2026-06-18
 
 - Adds a `0° Reference` label to clarify what the display selector controls.
 - Renames Flat to Fully Open for clearer wording.
 - Shows `Open` before the angle in the menu bar when using Fully Open mode.
 
-### 1.0.2
+### 1.0.2 - 2026-06-18
 
 - Renames the window title to MacBook Lid Angle to include compatible MacBook Air models.
 - Makes unsupported-device messaging model-neutral.
 - Removes the redundant “degrees” label beneath readings that already use the degree symbol.
 
-### 1.0.1
+### 1.0.1 - 2026-06-13
 
 - Makes Flat the default display mode.
 - Shows `Closed` before the angle in the menu bar when using Closed mode.
@@ -81,7 +81,7 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 - Shortens the visualiser base so it better matches the lid length.
 - Adds clearer download instructions for macOS Gatekeeper warnings.
 
-### 1.0.0
+### 1.0.0 - 2026-06-12
 
 - Initial release.
 - Shows the live MacBook lid angle.
