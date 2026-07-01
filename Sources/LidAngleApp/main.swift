@@ -2,14 +2,17 @@ import AppKit
 import Foundation
 import IOKit.hid
 
-final class AppDelegate: NSObject, NSApplicationDelegate {
+@MainActor
+final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMenuDelegate {
     private var window: NSWindow!
     private var controller: LidAngleViewController!
+    private var menuBarDisplayMenuItem: NSMenuItem!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
 
         controller = LidAngleViewController()
+        configureMainMenu()
         window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 560, height: 430),
             styleMask: [.titled, .closable, .miniaturizable],
@@ -20,13 +23,100 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.minSize = NSSize(width: 560, height: 430)
         window.maxSize = NSSize(width: 560, height: 430)
         window.contentViewController = controller
+        window.delegate = self
         window.centreOnMainScreen()
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
 
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !flag {
+            showWindow()
+        }
+        return true
+    }
+
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        sender.orderOut(nil)
+        return false
+    }
+
     func applicationWillTerminate(_ notification: Notification) {
         controller.stop()
+    }
+
+    private func showWindow() {
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func configureMainMenu() {
+        let mainMenu = NSMenu()
+        let appMenuItem = NSMenuItem()
+        mainMenu.addItem(appMenuItem)
+
+        let appMenu = NSMenu(title: "Lid Angle")
+        appMenu.delegate = self
+        appMenuItem.submenu = appMenu
+
+        appMenu.addItem(NSMenuItem(title: "About Lid Angle", action: #selector(showAboutPanel), keyEquivalent: ""))
+        appMenu.addItem(.separator())
+        appMenu.addItem(NSMenuItem(title: "Show Lid Angle", action: #selector(showWindowFromAppMenu), keyEquivalent: ""))
+
+        menuBarDisplayMenuItem = NSMenuItem(title: "Enable Menu Bar Display", action: #selector(toggleMenuBarDisplayFromAppMenu), keyEquivalent: "")
+        appMenu.addItem(menuBarDisplayMenuItem)
+
+        appMenu.addItem(.separator())
+        appMenu.addItem(NSMenuItem(title: "Support Lid Angle", action: #selector(openSupportPage), keyEquivalent: ""))
+        appMenu.addItem(NSMenuItem(title: "GitHub Page", action: #selector(openGitHubPage), keyEquivalent: ""))
+        appMenu.addItem(.separator())
+        appMenu.addItem(NSMenuItem(title: "Quit Lid Angle", action: #selector(quitFromAppMenu), keyEquivalent: "q"))
+        appMenu.items.forEach { $0.target = self }
+
+        NSApp.mainMenu = mainMenu
+    }
+
+    func menuWillOpen(_ menu: NSMenu) {
+        let isEnabled = controller.isMenuBarDisplayEnabled
+        menuBarDisplayMenuItem.title = isEnabled ? "Disable Menu Bar Display" : "Enable Menu Bar Display"
+        menuBarDisplayMenuItem.state = isEnabled ? .on : .off
+    }
+
+    @objc private func showAboutPanel() {
+        NSApp.orderFrontStandardAboutPanel(options: [
+            .applicationVersion: "1.0.5",
+            .version: "5",
+            NSApplication.AboutPanelOptionKey(rawValue: "Copyright"): "© 2026 Andrew Moss"
+        ])
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc private func showWindowFromAppMenu() {
+        showWindow()
+    }
+
+    @objc private func toggleMenuBarDisplayFromAppMenu() {
+        controller.setMenuBarDisplayEnabled(!controller.isMenuBarDisplayEnabled)
+    }
+
+    @objc private func openSupportPage() {
+        openURL("https://buymeacoffee.com/andrewmoss")
+    }
+
+    @objc private func openGitHubPage() {
+        openURL("https://github.com/andrewcharlesmoss/lid-angle")
+    }
+
+    @objc private func quitFromAppMenu() {
+        NSApp.terminate(nil)
+    }
+
+    private func openURL(_ string: String) {
+        guard let url = URL(string: string) else {
+            return
+        }
+
+        NSWorkspace.shared.open(url)
     }
 }
 
@@ -213,6 +303,15 @@ final class LidAngleViewController: NSViewController {
         removeStatusItem()
     }
 
+    var isMenuBarDisplayEnabled: Bool {
+        menuBarCheckbox.state == .on
+    }
+
+    func setMenuBarDisplayEnabled(_ enabled: Bool) {
+        menuBarCheckbox.state = enabled ? .on : .off
+        menuBarDisplayChanged()
+    }
+
     @objc private func displayModeChanged() {
         updateDisplayedAngle()
     }
@@ -360,7 +459,12 @@ final class LidAngleViewController: NSViewController {
     }
 
     @objc private func showWindowFromMenuBar() {
-        view.window?.makeKeyAndOrderFront(nil)
+        guard let window = view.window else {
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
 
@@ -517,7 +621,7 @@ enum ModeIcon {
             let base = NSBezierPath()
             base.lineWidth = 2.2
             base.lineCapStyle = .round
-            base.move(to: NSPoint(x: 13, y: 7))
+            base.move(to: NSPoint(x: 14, y: 7))
             base.line(to: NSPoint(x: 24, y: 7))
             base.stroke()
 
@@ -525,10 +629,10 @@ enum ModeIcon {
             lid.lineWidth = 2.2
             lid.lineCapStyle = .round
             lid.move(to: NSPoint(x: 4, y: 7))
-            lid.line(to: NSPoint(x: 13, y: 7))
+            lid.line(to: NSPoint(x: 14, y: 7))
             lid.stroke()
 
-            let hinge = NSBezierPath(ovalIn: NSRect(x: 11.2, y: 5.2, width: 3.6, height: 3.6))
+            let hinge = NSBezierPath(ovalIn: NSRect(x: 12.2, y: 5.2, width: 3.6, height: 3.6))
             hinge.fill()
         }
 

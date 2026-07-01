@@ -16,6 +16,12 @@ Download the latest zip file from the GitHub Releases page, unzip it, and move `
 
 macOS may show a warning that Apple could not verify the app. This is expected because this release is not notarised by Apple. To open it, go to System Settings > Privacy & Security and choose Open Anyway for `Lid Angle.app`, or control-click the app and choose Open.
 
+## Support
+
+Lid Angle is free. If it helped you, made you laugh, or saved you measuring your MacBook with a protractor, you can support it here:
+
+[Buy me a coffee](https://buymeacoffee.com/andrewmoss)
+
 ## Run
 
 ```sh
@@ -38,6 +44,15 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 
 
 ## Changelog
+
+### 1.0.5
+
+- Fixes the menu bar Show Lid Angle action after the main window is closed.
+- Keeps the main window available after closing it, so it can be reopened from the menu bar.
+- Adds a Lid Angle app menu with Show, menu bar display, Support, GitHub, About, and Quit items.
+- Adds a support link to the README.
+- Centres the hinge dot in the Fully Open selector icon.
+- Shows the copyright notice in the About panel.
 
 ### 1.0.4
 
