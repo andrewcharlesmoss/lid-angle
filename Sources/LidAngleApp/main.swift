@@ -84,8 +84,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
 
     @objc private func showAboutPanel() {
         NSApp.orderFrontStandardAboutPanel(options: [
-            .applicationVersion: "1.0.5",
-            .version: "5",
+            .applicationVersion: "1.0.6",
+            .version: "6",
             NSApplication.AboutPanelOptionKey(rawValue: "Copyright"): "© 2026 Andrew Moss"
         ])
         NSApp.activate(ignoringOtherApps: true)
@@ -134,6 +134,64 @@ private extension NSWindow {
     }
 }
 
+struct AngleStabiliser {
+    private let consistentReadingCount: Int
+    private let immediateChangeThreshold: Int
+    private(set) var value: Int?
+    private var candidate: Int?
+    private var candidateCount = 0
+
+    init(consistentReadingCount: Int = 3, immediateChangeThreshold: Int = 2) {
+        precondition(consistentReadingCount > 0)
+        precondition(immediateChangeThreshold > 0)
+        self.consistentReadingCount = consistentReadingCount
+        self.immediateChangeThreshold = immediateChangeThreshold
+    }
+
+    mutating func update(with reading: Int) -> Int {
+        guard let value else {
+            self.value = reading
+            clearCandidate()
+            return reading
+        }
+
+        guard reading != value else {
+            clearCandidate()
+            return value
+        }
+
+        if abs(reading - value) >= immediateChangeThreshold {
+            self.value = reading
+            clearCandidate()
+            return reading
+        }
+
+        if candidate == reading {
+            candidateCount += 1
+        } else {
+            candidate = reading
+            candidateCount = 1
+        }
+
+        if candidateCount >= consistentReadingCount {
+            self.value = reading
+            clearCandidate()
+        }
+
+        return self.value ?? reading
+    }
+
+    mutating func reset() {
+        value = nil
+        clearCandidate()
+    }
+
+    private mutating func clearCandidate() {
+        candidate = nil
+        candidateCount = 0
+    }
+}
+
 final class LidAngleViewController: NSViewController {
     private enum DisplayMode: Int {
         case fromFlat = 0
@@ -162,6 +220,7 @@ final class LidAngleViewController: NSViewController {
     private var statusTopConstraint: NSLayoutConstraint!
     private var modeTopConstraint: NSLayoutConstraint!
     private var modeWidthConstraint: NSLayoutConstraint!
+    private var angleStabiliser = AngleStabiliser()
     private var lastSensorAngle: Int?
     private var lastCreakAngle: Int?
     private var lastCreakTime: TimeInterval = 0
@@ -338,6 +397,7 @@ final class LidAngleViewController: NSViewController {
         switch reader.readAngle() {
         case .success(let angle):
             if angle == 1 {
+                angleStabiliser.reset()
                 lastSensorAngle = nil
                 angleLabel.stringValue = "Docked"
                 statusLabel.stringValue = "The sensor reports docked mode."
@@ -347,12 +407,14 @@ final class LidAngleViewController: NSViewController {
             }
 
             let clamped = max(0, min(angle, 180))
-            playCreakIfNeeded(for: clamped)
-            lastSensorAngle = clamped
-            visualiser.angle = CGFloat(clamped)
+            let stabilised = angleStabiliser.update(with: clamped)
+            playCreakIfNeeded(for: stabilised)
+            lastSensorAngle = stabilised
+            visualiser.angle = CGFloat(stabilised)
             updateDisplayedAngle()
 
         case .failure(let error):
+            angleStabiliser.reset()
             lastSensorAngle = nil
             angleLabel.stringValue = "--"
             statusLabel.stringValue = error.userMessage
@@ -583,6 +645,7 @@ final class LidVisualiserView: NSView {
     }
 }
 
+@MainActor
 enum ModeIcon {
     static let closed = makeIcon(kind: .closed)
     static let flat = makeIcon(kind: .flat)
