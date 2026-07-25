@@ -47,7 +47,7 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 
 ### 1.0.6 - 2026-07-25
 
-- Stabilises stationary lid-angle readings so they do not flicker between neighbouring degrees.
+- Stabilises stationary lid angle readings so they do not flicker between neighbouring degrees.
 - Keeps larger lid movements responsive while confirming one-degree changes across consecutive sensor readings.
 
 ### 1.0.5 - 2026-07-01
