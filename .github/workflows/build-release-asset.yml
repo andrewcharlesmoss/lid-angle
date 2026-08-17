@@ -21,7 +21,20 @@ jobs:
           ref: ${{ inputs.tag }}
 
       - name: Build
-        run: swift build -c release
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          swift build -c release -v 2>&1 | tee build.log
+
+      - name: Publish build diagnostics
+        if: steps.build.outcome == 'failure'
+        run: |
+          {
+            echo "## Swift build diagnostics"
+            tail -200 build.log
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1
 
       - name: Package app
         env:
@@ -31,7 +44,8 @@ jobs:
           APP_NAME="Lid Angle.app"
           APP_DIR="dist/$APP_NAME"
           mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
-          cp .build/arm64-apple-macosx/release/LidAngleApp "$APP_DIR/Contents/MacOS/LidAngleApp"
+          BINARY="$(find .build -path '*/release/LidAngleApp' -type f -print -quit)"
+          cp "$BINARY" "$APP_DIR/Contents/MacOS/LidAngleApp"
           cp Resources/AppIcon.icns "$APP_DIR/Contents/Resources/AppIcon.icns"
           cp Resources/DoorCreak.wav "$APP_DIR/Contents/Resources/DoorCreak.wav"
           cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
