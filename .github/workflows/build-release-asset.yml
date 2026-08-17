@@ -44,6 +44,8 @@ jobs:
           APP_NAME="Lid Angle.app"
           APP_DIR="dist/$APP_NAME"
           mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
+          VERSION="${TAG#v}"
+          BUILD_NUMBER="${VERSION##*.}"
           BINARY="$(find .build -path '*/release/LidAngleApp' -type f -print -quit)"
           cp "$BINARY" "$APP_DIR/Contents/MacOS/LidAngleApp"
           cp Resources/AppIcon.icns "$APP_DIR/Contents/Resources/AppIcon.icns"
@@ -66,9 +68,9 @@ jobs:
             <key>CFBundlePackageType</key>
             <string>APPL</string>
             <key>CFBundleShortVersionString</key>
-            <string>1.0.7</string>
+            <string>$VERSION</string>
             <key>CFBundleVersion</key>
-            <string>1.0.7</string>
+            <string>$BUILD_NUMBER</string>
             <key>LSMinimumSystemVersion</key>
             <string>14.0</string>
           </dict>
