@@ -85,7 +85,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
     @objc private func showAboutPanel() {
         NSApp.orderFrontStandardAboutPanel(options: [
             .applicationVersion: "1.0.7",
-            1.0.7.version: "7",
+            .version: "7",
             NSApplication.AboutPanelOptionKey(rawValue: "Copyright"): "© 2026 Andrew Moss"
         ])
         NSApp.activate(ignoringOtherApps: true)
