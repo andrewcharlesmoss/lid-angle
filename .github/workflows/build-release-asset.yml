@@ -50,7 +50,7 @@ jobs:
           cp "$BINARY" "$APP_DIR/Contents/MacOS/LidAngleApp"
           cp Resources/AppIcon.icns "$APP_DIR/Contents/Resources/AppIcon.icns"
           cp Resources/DoorCreak.wav "$APP_DIR/Contents/Resources/DoorCreak.wav"
-          cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
+          cat > "$APP_DIR/Contents/Info.plist" <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
