@@ -74,6 +74,8 @@ jobs:
           </dict>
           </plist>
           PLIST
+          codesign --force --deep --sign - "$APP_DIR"
+          codesign --verify --deep --strict "$APP_DIR"
           ditto -c -k --sequesterRsrc --keepParent "$APP_DIR" "lid-angle-$TAG.zip"
 
       - name: Upload asset to release
