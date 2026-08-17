@@ -45,13 +45,9 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 
 ## Changelog
 
-### 1.0.8 — 2026-08-17
-
-- Corrects the version displayed in the About panel and release app metadata.
-
 ### 1.0.7 — 2026-08-17
 
-- Updates the support link.
+- Updates the support link and corrects the version displayed in the About panel and release app metadata.
 
 ### 1.0.6 — 2026-07-25
 
