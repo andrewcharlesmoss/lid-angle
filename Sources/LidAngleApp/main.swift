@@ -100,7 +100,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
     }
 
     @objc private func openSupportPage() {
-        openURL("https://buymeacoffee.com/andrewmoss")
+        openURL("https://buymeacoffee.com/andrewcharlesmoss")
     }
 
     @objc private func openGitHubPage() {

@@ -20,7 +20,7 @@ macOS may show a warning that Apple could not verify the app. This is expected b
 
 Lid Angle is free. If it helped you, made you laugh, or saved you measuring your MacBook with a protractor, you can support it here:
 
-[Buy me a coffee](https://buymeacoffee.com/andrewmoss)
+[Buy me a coffee](https://buymeacoffee.com/andrewcharlesmoss)
 
 ## Run
 
