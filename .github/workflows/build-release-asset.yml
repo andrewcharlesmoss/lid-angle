@@ -1,0 +1,69 @@
+name: Build release asset
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to build
+        required: true
+        default: v1.0.7
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Build
+        run: swift build -c release
+
+      - name: Package app
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          APP_NAME="Lid Angle.app"
+          APP_DIR="dist/$APP_NAME"
+          mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
+          cp .build/arm64-apple-macosx/release/LidAngleApp "$APP_DIR/Contents/MacOS/LidAngleApp"
+          cp Resources/AppIcon.icns "$APP_DIR/Contents/Resources/AppIcon.icns"
+          cp Resources/DoorCreak.wav "$APP_DIR/Contents/Resources/DoorCreak.wav"
+          cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleDisplayName</key>
+            <string>Lid Angle</string>
+            <key>CFBundleExecutable</key>
+            <string>LidAngleApp</string>
+            <key>CFBundleIconFile</key>
+            <string>AppIcon</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.andrewcharlesmoss.lid-angle</string>
+            <key>CFBundleName</key>
+            <string>Lid Angle</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>1.0.7</string>
+            <key>CFBundleVersion</key>
+            <string>1.0.7</string>
+            <key>LSMinimumSystemVersion</key>
+            <string>14.0</string>
+          </dict>
+          </plist>
+          PLIST
+          ditto -c -k --sequesterRsrc --keepParent "$APP_DIR" "lid-angle-$TAG.zip"
+
+      - name: Upload asset to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: gh release upload "$TAG" "lid-angle-$TAG.zip" --repo "${{ github.repository }}" --clobber
