@@ -329,8 +329,6 @@ final class LidAngleViewController: NSViewController {
             modeWidthConstraint,
             fullyOpenButton.widthAnchor.constraint(equalToConstant: 138),
             closedButton.widthAnchor.constraint(equalToConstant: 112),
-            fullyOpenButton.heightAnchor.constraint(equalToConstant: 34),
-            closedButton.heightAnchor.constraint(equalToConstant: 34),
 
             visualiserTopConstraint,
             visualiser.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -18),
