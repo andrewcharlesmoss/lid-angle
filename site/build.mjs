@@ -6,7 +6,12 @@ const [sourceHtml, screenshot] = await Promise.all([
   readFile(sourceUrl, "utf8"),
   readFile(screenshotUrl)
 ]);
+const iconMatch = sourceHtml.match(/<img[^>]+src="(data:image\/png;base64,[^"]+)"/);
+if (!iconMatch) throw new Error("Embedded app icon not found");
 const html = sourceHtml.replace(
+  'href="favicon.png"',
+  `href="${iconMatch[1]}"`
+).replace(
   'src="screenshot.png"',
   `src="data:image/png;base64,${screenshot.toString("base64")}"`
 );
