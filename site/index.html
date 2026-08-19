@@ -56,7 +56,8 @@
     .footer-brand-angle { background: linear-gradient(100deg, #09bfff, #187cff 55%, #8653ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .footer-copy { text-align: center; }
     .footer-links { display: flex; justify-content: flex-end; gap: 20px; }
-    .footer-link { color: #dce9ff; font-size: 14px; font-weight: 650; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 3px; }
+    .footer-link { display: inline-flex; align-items: center; gap: 8px; color: #dce9ff; font-size: 14px; font-weight: 650; text-decoration: none; }
+    .linkedin-mark { display: inline-flex; align-items: flex-end; justify-content: center; width: 22px; height: 22px; border-radius: 4px; background: #0a66c2; color: #fff; font-size: 16px; font-weight: 800; letter-spacing: -.08em; line-height: 19px; }
     @media (max-width: 760px) {
       .wrap { width: min(100% - 40px, 560px); }
       nav { min-height: 76px; }
@@ -115,7 +116,7 @@
       <a class="footer-brand" href="/"><img src="footer-icon.png" alt=""> <span class="footer-brand-text"><span class="footer-brand-lid">Lid </span><span class="footer-brand-angle">Angle</span></span></a>
       <div class="footer-copy">© 2026 Andrew Moss. All Rights Reserved.</div>
       <div class="footer-links" aria-label="Andrew Moss links">
-        <a class="footer-link" href="https://uk.linkedin.com/in/andrewcharlesmoss" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        <a class="footer-link" href="https://uk.linkedin.com/in/andrewcharlesmoss" target="_blank" rel="noopener noreferrer" aria-label="Andrew Moss on LinkedIn"><span class="linkedin-mark" aria-hidden="true">in</span><span>LinkedIn ↗</span></a>
       </div>
     </div>
   </footer>
