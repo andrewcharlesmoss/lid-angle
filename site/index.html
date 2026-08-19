@@ -27,10 +27,7 @@
     .lede { max-width: 540px; margin: 31px 0 37px; color: #b7c4d7; font-size: clamp(17px, 1.6vw, 20px); line-height: 1.5; letter-spacing: -.025em; }
     .primary { display: inline-flex; align-items: center; min-height: 50px; padding: 0 19px; border-radius: 11px; background: linear-gradient(110deg, #0d8eff, #3d5fff); color: #fff; font-size: 15px; font-weight: 750; text-decoration: none; box-shadow: 0 12px 28px rgba(20, 107, 255, .32); }
     .video { position: relative; display: block; overflow: hidden; width: min(100%, 336px); aspect-ratio: 9 / 16; border: 1px solid rgba(180, 215, 255, .2); border-radius: 21px; background: #020307; box-shadow: 0 25px 65px rgba(0, 0, 0, .46), 0 0 60px rgba(25, 107, 255, .16); }
-    .video img { width: 100%; height: 100%; object-fit: cover; }
-    .video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2, 3, 7, .04), rgba(2, 3, 7, .78)); }
-    .video-label { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 1; display: flex; align-items: center; gap: 10px; color: #fff; font-size: 14px; font-weight: 750; }
-    .play { display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 auto; border-radius: 50%; background: #ff0033; font-size: 13px; }
+    .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     .details { border-top: 1px solid rgba(191, 216, 255, .13); border-bottom: 1px solid rgba(191, 216, 255, .13); background: rgba(16, 24, 37, .67); }
     .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 42px; padding: 34px 0 37px; }
     .detail { padding-left: 17px; border-left: 2px solid #197aff; }
@@ -68,10 +65,9 @@
         <p class="lede">Lid Angle reads your MacBook’s built-in lid angle sensor and shows the current measurement in real time.</p>
         <a class="primary" href="https://github.com/andrewcharlesmoss/lid-angle">Get Lid Angle on GitHub ↗</a>
       </div>
-      <a class="video" href="https://www.youtube.com/shorts/Dcvu5nJqMj8?feature=share" target="_blank" rel="noopener noreferrer" aria-label="Watch the Lid Angle video on YouTube">
-        <img src="https://i.ytimg.com/vi/Dcvu5nJqMj8/hqdefault.jpg" alt="">
-        <span class="video-label"><span class="play" aria-hidden="true">▶</span>Watch on YouTube ↗</span>
-      </a>
+      <div class="video" aria-label="Lid Angle video">
+        <iframe src="https://www.youtube.com/embed/Dcvu5nJqMj8?rel=0&modestbranding=1&playsinline=1" title="Lid Angle demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
     </section>
   </main>
   <section class="details" aria-label="Lid Angle details">
