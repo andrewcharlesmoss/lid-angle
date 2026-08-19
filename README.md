@@ -48,6 +48,7 @@ The sensor was introduced on the 2019 16-inch MacBook Pro and is present on vari
 ### 1.0.7 — 2026-08-17
 
 - Updates the support link and corrects the version displayed in the About panel and release app metadata.
+- Restores the blue active state for the display mode selector.
 
 ### 1.0.6 — 2026-07-25
 

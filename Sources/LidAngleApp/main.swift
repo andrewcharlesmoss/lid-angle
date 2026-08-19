@@ -239,6 +239,8 @@ final class LidAngleViewController: NSViewController {
         referenceLabel.textColor = .secondaryLabelColor
 
         modeControl.selectedSegment = DisplayMode.fromFlat.rawValue
+        modeControl.segmentStyle = .texturedRounded
+        modeControl.selectedSegmentBezelColor = .systemBlue
         modeControl.target = self
         modeControl.action = #selector(displayModeChanged)
         modeControl.setImage(ModeIcon.closed, forSegment: DisplayMode.hinge.rawValue)
