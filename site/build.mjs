@@ -21,10 +21,21 @@ const html = sourceHtml.replace(
   'src="screenshot.png"',
   `src="data:image/png;base64,${screenshot.toString("base64")}"`
 );
+const screenshotBase64 = screenshot.toString("base64");
 const worker = `const page = ${JSON.stringify(html)};
+const ogImage = Uint8Array.from(atob(${JSON.stringify(screenshotBase64)}), (char) => char.charCodeAt(0));
 
 export default {
-  fetch() {
+  fetch(request) {
+    const url = new URL(request.url);
+    if (url.pathname === "/og-image.png") {
+      return new Response(ogImage, {
+        headers: {
+          "content-type": "image/png",
+          "cache-control": "public, max-age=86400"
+        }
+      });
+    }
     return new Response(page, {
       headers: {
         "content-type": "text/html; charset=utf-8",
