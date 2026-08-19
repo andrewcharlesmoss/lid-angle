@@ -12,6 +12,9 @@ const html = sourceHtml.replace(
   'href="favicon.png"',
   `href="${iconMatch[1]}"`
 ).replace(
+  'const appIcon = "favicon.png"',
+  `const appIcon = "${iconMatch[1]}"`
+).replace(
   'src="screenshot.png"',
   `src="data:image/png;base64,${screenshot.toString("base64")}"`
 );
