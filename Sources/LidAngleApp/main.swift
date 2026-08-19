@@ -203,7 +203,9 @@ final class LidAngleViewController: NSViewController {
     private let referenceLabel = NSTextField(labelWithString: "0° Reference")
     private let controlRow = NSStackView()
     private let optionsRow = NSStackView()
-    private let modeControl = NSSegmentedControl(labels: ["Fully Open", "Closed"], trackingMode: .selectOne, target: nil, action: nil)
+    private let modeSelector = NSStackView()
+    private let fullyOpenButton = NSButton(title: "Fully Open", target: nil, action: nil)
+    private let closedButton = NSButton(title: "Closed", target: nil, action: nil)
     private let menuBarCheckbox = NSButton(checkboxWithTitle: "Menu Bar", target: nil, action: nil)
     private let creakCheckbox = NSButton(checkboxWithTitle: "Sound", target: nil, action: nil)
     private let angleLabel = NSTextField(labelWithString: "--")
@@ -220,6 +222,7 @@ final class LidAngleViewController: NSViewController {
     private var statusTopConstraint: NSLayoutConstraint!
     private var modeTopConstraint: NSLayoutConstraint!
     private var modeWidthConstraint: NSLayoutConstraint!
+    private var displayMode: DisplayMode = .fromFlat
     private var angleStabiliser = AngleStabiliser()
     private var lastSensorAngle: Int?
     private var lastCreakAngle: Int?
@@ -238,20 +241,25 @@ final class LidAngleViewController: NSViewController {
         referenceLabel.alignment = .center
         referenceLabel.textColor = .secondaryLabelColor
 
-        modeControl.selectedSegment = DisplayMode.fromFlat.rawValue
-        modeControl.segmentStyle = .texturedRounded
-        modeControl.selectedSegmentBezelColor = .systemBlue
-        modeControl.target = self
-        modeControl.action = #selector(displayModeChanged)
-        modeControl.setImage(ModeIcon.closed, forSegment: DisplayMode.hinge.rawValue)
-        modeControl.setImage(ModeIcon.flat, forSegment: DisplayMode.fromFlat.rawValue)
-        modeControl.setImageScaling(.scaleProportionallyDown, forSegment: DisplayMode.hinge.rawValue)
-        modeControl.setImageScaling(.scaleProportionallyDown, forSegment: DisplayMode.fromFlat.rawValue)
-        modeControl.setToolTip("Show 0 degrees when the lid is closed", forSegment: DisplayMode.hinge.rawValue)
-        modeControl.setToolTip("Show 0 degrees when the lid is fully open", forSegment: DisplayMode.fromFlat.rawValue)
-        modeControl.setWidth(112, forSegment: DisplayMode.hinge.rawValue)
-        modeControl.setWidth(138, forSegment: DisplayMode.fromFlat.rawValue)
-        modeControl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        configureModeButton(
+            fullyOpenButton,
+            mode: .fromFlat,
+            image: ModeIcon.flat,
+            tooltip: "Show 0 degrees when the lid is fully open"
+        )
+        configureModeButton(
+            closedButton,
+            mode: .hinge,
+            image: ModeIcon.closed,
+            tooltip: "Show 0 degrees when the lid is closed"
+        )
+        modeSelector.orientation = .horizontal
+        modeSelector.alignment = .centerY
+        modeSelector.spacing = 4
+        modeSelector.distribution = .gravityAreas
+        modeSelector.addArrangedSubview(fullyOpenButton)
+        modeSelector.addArrangedSubview(closedButton)
+        updateModeButtonAppearance()
 
         menuBarCheckbox.target = self
         menuBarCheckbox.action = #selector(menuBarDisplayChanged)
@@ -275,7 +283,7 @@ final class LidAngleViewController: NSViewController {
         controlRow.spacing = 6
         controlRow.distribution = .gravityAreas
         controlRow.addArrangedSubview(referenceLabel)
-        controlRow.addArrangedSubview(modeControl)
+        controlRow.addArrangedSubview(modeSelector)
         controlRow.addArrangedSubview(optionsRow)
 
         angleLabel.font = .monospacedDigitSystemFont(ofSize: 72, weight: .bold)
@@ -304,7 +312,7 @@ final class LidAngleViewController: NSViewController {
 
         titleTopConstraint = titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 14)
         modeTopConstraint = controlRow.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8)
-        modeWidthConstraint = modeControl.widthAnchor.constraint(equalToConstant: 250)
+        modeWidthConstraint = modeSelector.widthAnchor.constraint(equalToConstant: 250)
         visualiserTopConstraint = visualiser.topAnchor.constraint(equalTo: controlRow.bottomAnchor, constant: 20)
         visualiserWidthConstraint = visualiser.widthAnchor.constraint(equalToConstant: 260)
         visualiserHeightConstraint = visualiser.heightAnchor.constraint(equalToConstant: 122)
@@ -319,6 +327,8 @@ final class LidAngleViewController: NSViewController {
             modeTopConstraint,
             controlRow.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             modeWidthConstraint,
+            fullyOpenButton.widthAnchor.constraint(equalToConstant: 138),
+            closedButton.widthAnchor.constraint(equalToConstant: 112),
 
             visualiserTopConstraint,
             visualiser.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -18),
@@ -373,7 +383,9 @@ final class LidAngleViewController: NSViewController {
         menuBarDisplayChanged()
     }
 
-    @objc private func displayModeChanged() {
+    @objc private func displayModeChanged(_ sender: NSButton) {
+        displayMode = DisplayMode(rawValue: sender.tag) ?? .fromFlat
+        updateModeButtonAppearance()
         updateDisplayedAngle()
     }
 
@@ -430,8 +442,7 @@ final class LidAngleViewController: NSViewController {
             return
         }
 
-        let mode = DisplayMode(rawValue: modeControl.selectedSegment) ?? .fromFlat
-        switch mode {
+        switch displayMode {
         case .hinge:
             angleLabel.stringValue = "\(sensorAngle)°"
             statusLabel.stringValue = "0° is closed.\nLarger numbers mean the lid is more open."
@@ -544,7 +555,9 @@ final class LidAngleViewController: NSViewController {
         angleLabel.font = .monospacedDigitSystemFont(ofSize: 72 * scale, weight: .bold)
         statusLabel.font = .systemFont(ofSize: 13 * scale, weight: .regular)
         referenceLabel.font = .systemFont(ofSize: 11 * scale, weight: .medium)
-        modeControl.font = .systemFont(ofSize: 12 * scale, weight: .medium)
+        fullyOpenButton.font = .systemFont(ofSize: 12 * scale, weight: .medium)
+        closedButton.font = .systemFont(ofSize: 12 * scale, weight: .medium)
+        updateModeButtonAppearance()
         menuBarCheckbox.font = .systemFont(ofSize: 12 * scale, weight: .medium)
         creakCheckbox.font = .systemFont(ofSize: 12 * scale, weight: .medium)
 
@@ -557,6 +570,37 @@ final class LidAngleViewController: NSViewController {
         visualiserWidthConstraint.constant = min(max(width * 0.72, 235), 560)
         visualiserHeightConstraint.constant = min(max(width * 0.38, 168), 225)
         visualiser.strokeScale = scale
+    }
+
+    private func configureModeButton(_ button: NSButton, mode: DisplayMode, image: NSImage, tooltip: String) {
+        button.tag = mode.rawValue
+        button.target = self
+        button.action = #selector(displayModeChanged)
+        button.bezelStyle = .rounded
+        button.setButtonType(.momentaryPushIn)
+        button.image = image
+        button.imagePosition = .imageLeft
+        button.imageScaling = .scaleProportionallyDown
+        button.toolTip = tooltip
+        button.font = .systemFont(ofSize: 12, weight: .medium)
+    }
+
+    private func updateModeButtonAppearance() {
+        styleModeButton(fullyOpenButton, isSelected: displayMode == .fromFlat)
+        styleModeButton(closedButton, isSelected: displayMode == .hinge)
+    }
+
+    private func styleModeButton(_ button: NSButton, isSelected: Bool) {
+        let colour: NSColor = isSelected ? .white : .labelColor
+        button.bezelColor = isSelected ? .systemBlue : .controlColor
+        button.contentTintColor = colour
+        button.attributedTitle = NSAttributedString(
+            string: button.title,
+            attributes: [
+                .font: button.font ?? .systemFont(ofSize: 12, weight: .medium),
+                .foregroundColor: colour
+            ]
+        )
     }
 }
 
