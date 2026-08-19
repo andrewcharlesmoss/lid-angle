@@ -1,6 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
-const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
+const sourceUrl = new URL("./index.html", import.meta.url);
+const screenshotUrl = new URL("./screenshot.png", import.meta.url);
+const [sourceHtml, screenshot] = await Promise.all([
+  readFile(sourceUrl, "utf8"),
+  readFile(screenshotUrl)
+]);
+const html = sourceHtml.replace(
+  'src="screenshot.png"',
+  `src="data:image/png;base64,${screenshot.toString("base64")}"`
+);
 const worker = `const page = ${JSON.stringify(html)};
 
 export default {
