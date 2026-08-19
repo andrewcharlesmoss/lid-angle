@@ -28,6 +28,8 @@
     .primary { display: inline-flex; align-items: center; min-height: 50px; padding: 0 19px; border-radius: 11px; background: linear-gradient(110deg, #0d8eff, #3d5fff); color: #fff; font-size: 15px; font-weight: 750; text-decoration: none; box-shadow: 0 12px 28px rgba(20, 107, 255, .32); }
     .video { position: relative; display: block; overflow: hidden; width: min(100%, 336px); aspect-ratio: 9 / 16; border: 1px solid rgba(180, 215, 255, .2); border-radius: 21px; background: #020307; box-shadow: 0 25px 65px rgba(0, 0, 0, .46), 0 0 60px rgba(25, 107, 255, .16); }
     .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .app-screenshot { display: block; width: min(100%, 336px); height: auto; border: 1px solid rgba(180, 215, 255, .2); border-radius: 21px; box-shadow: 0 25px 65px rgba(0, 0, 0, .46), 0 0 60px rgba(25, 107, 255, .16); }
+    .video-section { display: flex; justify-content: center; margin-top: clamp(64px, 9vw, 112px); }
     .details { border-top: 1px solid rgba(191, 216, 255, .13); border-bottom: 1px solid rgba(191, 216, 255, .13); background: rgba(16, 24, 37, .67); }
     .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 42px; padding: 22px 0 37px; }
     .detail { padding-left: 17px; border-left: 2px solid #197aff; }
@@ -46,8 +48,10 @@
       .brand img { width: 43px; height: 43px; border-radius: 12px; }
       h1 { font-size: clamp(52px, 14vw, 76px); line-height: .98; }
       .headline-line { white-space: normal; }
-      .hero { grid-template-columns: 1fr; gap: 49px; }
-      .video { justify-self: start; width: min(100%, 315px); }
+    .hero { grid-template-columns: 1fr; gap: 49px; }
+    .app-screenshot { width: min(100%, 315px); }
+    .video-section { margin-top: 49px; }
+    .video { justify-self: start; width: min(100%, 315px); }
       .detail-grid { grid-template-columns: 1fr; gap: 23px; padding: 30px 0; }
       .footer-inner { grid-template-columns: 1fr; gap: 6px; padding: 20px 0 22px; text-align: center; }
       .footer-copy, .footer-note { text-align: center; }
@@ -72,10 +76,13 @@
         <p class="lede">Lid Angle reads your MacBook’s built-in lid angle sensor and shows the current measurement in real time.</p>
         <a class="primary" href="https://github.com/andrewcharlesmoss/lid-angle">Get Lid Angle on GitHub ↗</a>
       </div>
+      <img class="app-screenshot" src="screenshot.png" alt="Lid Angle app window showing a 76 degree MacBook lid angle reading">
+    </section>
+    <div class="video-section">
       <div class="video" aria-label="Lid Angle video">
         <iframe src="https://www.youtube.com/embed/Dcvu5nJqMj8?rel=0&modestbranding=1&playsinline=1" title="Lid Angle demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
-    </section>
+    </div>
   </main>
   <section class="details" aria-label="Lid Angle details">
     <div class="wrap detail-grid">
