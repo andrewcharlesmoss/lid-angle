@@ -576,8 +576,9 @@ final class LidAngleViewController: NSViewController {
         button.tag = mode.rawValue
         button.target = self
         button.action = #selector(displayModeChanged)
-        button.bezelStyle = .rounded
+        button.isBordered = false
         button.setButtonType(.momentaryPushIn)
+        button.wantsLayer = true
         button.image = image
         button.imagePosition = .imageLeft
         button.imageScaling = .scaleProportionallyDown
@@ -592,7 +593,9 @@ final class LidAngleViewController: NSViewController {
 
     private func styleModeButton(_ button: NSButton, isSelected: Bool) {
         let colour: NSColor = isSelected ? .white : .labelColor
-        button.bezelColor = isSelected ? .systemBlue : NSColor(calibratedWhite: 0.86, alpha: 1)
+        button.layer?.backgroundColor = (isSelected ? NSColor.systemBlue : NSColor(calibratedWhite: 0.86, alpha: 1)).cgColor
+        button.layer?.cornerRadius = 6
+        button.layer?.masksToBounds = true
         button.contentTintColor = colour
         button.attributedTitle = NSAttributedString(
             string: button.title,
