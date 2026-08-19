@@ -592,7 +592,7 @@ final class LidAngleViewController: NSViewController {
 
     private func styleModeButton(_ button: NSButton, isSelected: Bool) {
         let colour: NSColor = isSelected ? .white : .labelColor
-        button.bezelColor = isSelected ? .systemBlue : .controlColor
+        button.bezelColor = isSelected ? .systemBlue : NSColor(calibratedWhite: 0.86, alpha: 1)
         button.contentTintColor = colour
         button.attributedTitle = NSAttributedString(
             string: button.title,
