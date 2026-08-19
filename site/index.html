@@ -55,7 +55,6 @@
     .footer-brand-text { color: #fff; }
     .footer-brand-angle { background: linear-gradient(100deg, #09bfff, #187cff 55%, #8653ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .footer-copy { text-align: center; }
-    .footer-note { color: #dce9ff; text-align: right; }
     @media (max-width: 760px) {
       .wrap { width: min(100% - 40px, 560px); }
       nav { min-height: 76px; }
@@ -69,8 +68,9 @@
     .video-section { grid-template-columns: 1fr; gap: 34px; margin-top: 49px; }
     .video { justify-self: center; width: min(100%, 420px); }
       .detail-grid { gap: 23px; }
-      .footer-inner { grid-template-columns: 1fr; gap: 6px; padding: 20px 0 22px; text-align: center; }
-      .footer-copy, .footer-note { text-align: center; }
+      .footer-inner { min-height: 0; grid-template-columns: 1fr; justify-items: center; gap: 10px; padding: 14px 0 16px; text-align: center; }
+      .footer-brand { justify-self: center; }
+      .footer-copy { max-width: 100%; font-size: 13px; line-height: 1.25; text-align: center; }
     }
   </style>
 </head>
@@ -111,7 +111,6 @@
     <div class="wrap footer-inner">
       <a class="footer-brand" href="/"><img src="footer-icon.png" alt=""> <span class="footer-brand-text"><span class="footer-brand-lid">Lid </span><span class="footer-brand-angle">Angle</span></span></a>
       <div class="footer-copy">© 2026 Andrew Moss. All Rights Reserved.</div>
-      <div class="footer-note">Pure precision.</div>
     </div>
   </footer>
 </body>
