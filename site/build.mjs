@@ -2,9 +2,11 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const sourceUrl = new URL("./index.html", import.meta.url);
 const screenshotUrl = new URL("./screenshot.png", import.meta.url);
-const [sourceHtml, screenshot] = await Promise.all([
+const ogImageUrl = new URL("./og-image.png", import.meta.url);
+const [sourceHtml, screenshot, ogImage] = await Promise.all([
   readFile(sourceUrl, "utf8"),
-  readFile(screenshotUrl)
+  readFile(screenshotUrl),
+  readFile(ogImageUrl)
 ]);
 const iconMatch = sourceHtml.match(/<img[^>]+src="(data:image\/png;base64,[^"]+)"/);
 if (!iconMatch) throw new Error("Embedded app icon not found");
@@ -22,8 +24,9 @@ const html = sourceHtml.replace(
   `src="data:image/png;base64,${screenshot.toString("base64")}"`
 );
 const screenshotBase64 = screenshot.toString("base64");
+const ogImageBase64 = ogImage.toString("base64");
 const worker = `const page = ${JSON.stringify(html)};
-const ogImage = Uint8Array.from(atob(${JSON.stringify(screenshotBase64)}), (char) => char.charCodeAt(0));
+const ogImage = Uint8Array.from(atob(${JSON.stringify(ogImageBase64)}), (char) => char.charCodeAt(0));
 
 export default {
   fetch(request) {
