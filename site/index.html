@@ -9,21 +9,22 @@
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
     html { background: #06080d; }
-    body { margin: 0; color: #f6f8ff; background: radial-gradient(circle at 70% 22%, rgba(25, 105, 255, .18), transparent 30rem), #06080d; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; color: #f6f8ff; background: radial-gradient(circle at 70% 22%, rgba(25, 105, 255, .18), transparent 30rem), #06080d; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
     a { color: inherit; }
     .wrap { width: min(1120px, calc(100% - 48px)); margin: auto; }
     header { border-bottom: 1px solid rgba(191, 216, 255, .13); background: rgba(6, 8, 13, .75); backdrop-filter: blur(16px); }
-    nav { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; font-size: 23px; font-weight: 760; letter-spacing: -.055em; }
-    .brand img { width: 41px; height: 41px; border-radius: 11px; box-shadow: 0 0 22px rgba(26, 116, 255, .42); }
+    nav { min-height: 96px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; font-size: 33px; font-weight: 800; letter-spacing: -.075em; line-height: .9; }
+    .brand img { width: 54px; height: 54px; border-radius: 14px; box-shadow: 0 0 28px rgba(26, 116, 255, .42); }
     .brand-lid { color: #fff; }
     .brand-angle { background: linear-gradient(100deg, #09bfff, #187cff 55%, #8653ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .github-link { color: #dce9ff; font-size: 14px; font-weight: 650; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 3px; }
     main { padding: clamp(64px, 10vw, 118px) 0 74px; }
     .hero { display: grid; grid-template-columns: 1fr 336px; align-items: center; gap: clamp(50px, 10vw, 138px); }
     .eyebrow { margin: 0 0 18px; color: #69acff; font-size: 12px; letter-spacing: .13em; font-weight: 800; text-transform: uppercase; }
-    h1 { max-width: 670px; margin: 0; font-size: clamp(49px, 7.1vw, 88px); line-height: .92; letter-spacing: -.075em; }
-    .lede { max-width: 590px; margin: 27px 0 33px; color: #b7c4d7; font-size: clamp(17px, 2.2vw, 20px); line-height: 1.55; }
+    h1 { max-width: 950px; margin: 0; font-size: clamp(56px, 6vw, 104px); font-weight: 800; line-height: .88; letter-spacing: -.082em; text-wrap: balance; }
+    .headline-line { display: block; white-space: nowrap; }
+    .lede { max-width: 540px; margin: 31px 0 37px; color: #b7c4d7; font-size: clamp(17px, 1.6vw, 20px); line-height: 1.5; letter-spacing: -.025em; }
     .primary { display: inline-flex; align-items: center; min-height: 50px; padding: 0 19px; border-radius: 11px; background: linear-gradient(110deg, #0d8eff, #3d5fff); color: #fff; font-size: 15px; font-weight: 750; text-decoration: none; box-shadow: 0 12px 28px rgba(20, 107, 255, .32); }
     .video { position: relative; display: block; overflow: hidden; width: min(100%, 336px); aspect-ratio: 9 / 16; border: 1px solid rgba(180, 215, 255, .2); border-radius: 21px; background: #020307; box-shadow: 0 25px 65px rgba(0, 0, 0, .46), 0 0 60px rgba(25, 107, 255, .16); }
     .video img { width: 100%; height: 100%; object-fit: cover; }
@@ -38,8 +39,11 @@
     footer { padding: 29px 0 38px; color: #8291a7; font-size: 13px; }
     @media (max-width: 760px) {
       .wrap { width: min(100% - 40px, 560px); }
-      nav { min-height: 70px; }
-      .brand { font-size: 21px; }
+      nav { min-height: 76px; }
+      .brand { gap: 10px; font-size: 25px; }
+      .brand img { width: 43px; height: 43px; border-radius: 12px; }
+      h1 { font-size: clamp(52px, 14vw, 76px); line-height: .9; }
+      .headline-line { white-space: normal; }
       .hero { grid-template-columns: 1fr; gap: 49px; }
       .video { justify-self: start; width: min(100%, 315px); }
       .detail-grid { grid-template-columns: 1fr; gap: 23px; padding: 30px 0; }
@@ -60,7 +64,7 @@
     <section class="hero" aria-labelledby="page-title">
       <div>
         <p class="eyebrow">A small macOS app</p>
-        <h1 id="page-title">Find the exact angle of your MacBook lid.</h1>
+        <h1 id="page-title"><span class="headline-line">Find the exact angle</span><span class="headline-line">of your MacBook lid.</span></h1>
         <p class="lede">Lid Angle reads your MacBook’s built-in lid angle sensor and shows the current measurement in real time.</p>
         <a class="primary" href="https://github.com/andrewcharlesmoss/lid-angle">Get Lid Angle on GitHub ↗</a>
       </div>
