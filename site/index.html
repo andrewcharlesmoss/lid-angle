@@ -20,7 +20,7 @@
     .brand-angle { background: linear-gradient(100deg, #09bfff, #187cff 55%, #8653ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .github-link { color: #dce9ff; font-size: 14px; font-weight: 650; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 3px; }
     main { flex: 1; padding: clamp(64px, 10vw, 118px) 0 74px; }
-    .hero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: clamp(50px, 8vw, 108px); max-width: 1080px; margin-inline: auto; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 420px; align-items: center; gap: clamp(50px, 8vw, 108px); width: min(100%, 1080px); margin-inline: auto; }
     .eyebrow { margin: 0 0 18px; color: #69acff; font-size: 12px; letter-spacing: .13em; font-weight: 800; text-transform: uppercase; }
     h1 { max-width: 950px; margin: 0; font-size: clamp(56px, 6vw, 104px); font-weight: 650; line-height: 1; letter-spacing: -.025em; text-wrap: balance; }
     .headline-line { display: block; white-space: nowrap; }
@@ -28,7 +28,7 @@
     .primary { display: inline-flex; align-items: center; min-height: 50px; padding: 0 19px; border-radius: 11px; background: linear-gradient(110deg, #0d8eff, #3d5fff); color: #fff; font-size: 15px; font-weight: 750; text-decoration: none; box-shadow: 0 12px 28px rgba(20, 107, 255, .32); }
     .video { position: relative; display: block; overflow: hidden; width: min(100%, 560px); aspect-ratio: 9 / 16; border: 1px solid rgba(180, 215, 255, .2); border-radius: 21px; background: #020307; box-shadow: 0 25px 65px rgba(0, 0, 0, .46), 0 0 60px rgba(25, 107, 255, .16); }
     .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-    .app-screenshot { display: block; width: min(100%, 420px); height: auto; justify-self: center; border: 1px solid rgba(180, 215, 255, .2); border-radius: 21px; box-shadow: 0 25px 65px rgba(0, 0, 0, .46), 0 0 60px rgba(25, 107, 255, .16); }
+    .app-screenshot { display: block; width: min(100%, 420px); height: auto; justify-self: end; border: 1px solid rgba(180, 215, 255, .2); border-radius: 21px; box-shadow: 0 25px 65px rgba(0, 0, 0, .46), 0 0 60px rgba(25, 107, 255, .16); }
     .video-section { display: grid; grid-template-columns: minmax(440px, 560px) minmax(280px, 1fr); align-items: center; gap: clamp(48px, 7vw, 88px); margin: clamp(64px, 9vw, 112px) auto 0; max-width: 1000px; }
     .details { border: 0; background: transparent; }
     .detail-grid { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 0; }
