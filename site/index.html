@@ -40,8 +40,10 @@
     .detail p { margin: 0; color: #9dacc1; font-size: 16px; line-height: 1.55; }
     footer { border-top: 1px solid rgba(191, 216, 255, .13); background: radial-gradient(circle at 18% 50%, rgba(25, 122, 255, .14), transparent 28rem), #0b1422; color: #b7c4d7; }
     .footer-inner { min-height: 88px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 32px; font-size: 17px; line-height: 1.35; }
-    .footer-brand { color: #fff; font-weight: 700; text-decoration: none; }
-    .footer-brand span { background: linear-gradient(100deg, #09bfff, #187cff 55%, #8653ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .footer-brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; text-decoration: none; }
+    .footer-brand img { width: 30px; height: 30px; border-radius: 8px; box-shadow: 0 0 12px rgba(26, 116, 255, .3); }
+    .footer-brand-text { color: #fff; }
+    .footer-brand-angle { background: linear-gradient(100deg, #09bfff, #187cff 55%, #8653ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .footer-copy { text-align: center; }
     .footer-note { color: #dce9ff; text-align: right; }
     @media (max-width: 760px) {
@@ -97,7 +99,7 @@
   </main>
   <footer>
     <div class="wrap footer-inner">
-      <a class="footer-brand" href="/">Lid <span>Angle</span></a>
+      <a class="footer-brand" href="/"><img src="footer-icon.png" alt=""> <span class="footer-brand-text"><span class="footer-brand-lid">Lid </span><span class="footer-brand-angle">Angle</span></span></a>
       <div class="footer-copy">© 2026 Andrew Moss. All Rights Reserved.</div>
       <div class="footer-note">Keep your MacBook just right.</div>
     </div>

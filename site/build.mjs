@@ -15,6 +15,9 @@ const html = sourceHtml.replace(
   'const appIcon = "favicon.png"',
   `const appIcon = "${iconMatch[1]}"`
 ).replace(
+  'src="footer-icon.png"',
+  `src="${iconMatch[1]}"`
+).replace(
   'src="screenshot.png"',
   `src="data:image/png;base64,${screenshot.toString("base64")}"`
 );
