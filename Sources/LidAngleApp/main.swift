@@ -329,6 +329,8 @@ final class LidAngleViewController: NSViewController {
             modeWidthConstraint,
             fullyOpenButton.widthAnchor.constraint(equalToConstant: 138),
             closedButton.widthAnchor.constraint(equalToConstant: 112),
+            fullyOpenButton.heightAnchor.constraint(equalToConstant: 34),
+            closedButton.heightAnchor.constraint(equalToConstant: 34),
 
             visualiserTopConstraint,
             visualiser.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -18),
@@ -582,6 +584,8 @@ final class LidAngleViewController: NSViewController {
         button.image = image
         button.imagePosition = .imageLeft
         button.imageScaling = .scaleProportionallyDown
+        button.alignment = .center
+        button.imageHugsTitle = true
         button.toolTip = tooltip
         button.font = .systemFont(ofSize: 12, weight: .medium)
     }
