@@ -10,7 +10,7 @@ const [sourceHtml, screenshot, ogImage] = await Promise.all([
 ]);
 const iconMatch = sourceHtml.match(/<img[^>]+src="(data:image\/png;base64,[^"]+)"/);
 if (!iconMatch) throw new Error("Embedded app icon not found");
-const html = sourceHtml.replace(
+const html = sourceHtml.replaceAll(
   'href="favicon.png"',
   `href="${iconMatch[1]}"`
 ).replace(
