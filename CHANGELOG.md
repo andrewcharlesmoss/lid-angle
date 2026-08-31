@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Added
+
+- Added a repeatable local app bundle for testing changes in the Dock without downloading a release.
+
+### Changed
+
+- Slightly enlarged the Dock icon to match the visible size of macOS app icons.
+- Changed the menu bar reading to regular-weight text.
+
+### Fixed
+
+- Darkened the inactive display mode button in dark mode while preserving its light-mode appearance.
+
 ## 1.0.7 — 2026-08-17
 
 ### Changed

@@ -42,12 +42,15 @@ func drawIcon(size: Int) -> NSImage {
     NSGraphicsContext.current = context
     defer { NSGraphicsContext.restoreGraphicsState() }
 
-    let scale = CGFloat(size) / 1024
     let canvas = NSRect(x: 0, y: 0, width: size, height: size)
     NSColor.clear.setFill()
     canvas.fill()
 
-    let tile = canvas.insetBy(dx: 108 * scale, dy: 108 * scale)
+    // Match the solid tile bounds measured in macOS's Terminal and Activity
+    // Monitor icons. Scale the original 808-point artwork proportionally.
+    let tileInset = CGFloat(size) * (100.0 / 1024.0)
+    let tile = canvas.insetBy(dx: tileInset, dy: tileInset)
+    let scale = tile.width / 808
     let tileRadius = 220 * scale
 
     NSColor(calibratedWhite: 0, alpha: 0.16).setFill()

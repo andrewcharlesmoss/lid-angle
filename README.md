@@ -40,6 +40,22 @@ swift run LidAngleApp --once
 swift build -c release
 ```
 
+## Local app preview
+
+To test the actual app bundle and Dock icon without downloading a release, run
+this from the project root:
+
+```sh
+./work/build-local-app.sh
+```
+
+It updates the ignored local bundle at `outputs/local/Lid Angle Local.app` and
+keeps it separate from any released copy in Applications. The bundle uses Lid
+Angle's normal app identity, so menu-bar organisers apply the same visibility
+rule. Add this local app to the Dock once, then rerun the command and reopen it
+after each change. If macOS keeps an old icon, remove this local Dock item and
+add it again.
+
 The sensor was introduced on the 2019 16-inch MacBook Pro and is present on various newer MacBook Pro and MacBook Air models. Compatibility depends on whether the Mac exposes the HID lid angle sensor to apps. If your Mac does not expose this HID device, the app will show an unavailable state rather than crashing.
 
 ## Documentation

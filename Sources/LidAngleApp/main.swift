@@ -84,8 +84,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
 
     @objc private func showAboutPanel() {
         NSApp.orderFrontStandardAboutPanel(options: [
-            .applicationVersion: "1.0.7",
-            .version: "7",
+            .applicationVersion: "1.0.8",
+            .version: "8",
             NSApplication.AboutPanelOptionKey(rawValue: "Copyright"): "© 2026 Andrew Moss"
         ])
         NSApp.activate(ignoringOtherApps: true)
@@ -504,7 +504,7 @@ final class LidAngleViewController: NSViewController {
         }
 
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        item.button?.font = .monospacedDigitSystemFont(ofSize: 13, weight: .semibold)
+        item.button?.font = .monospacedDigitSystemFont(ofSize: 13, weight: .regular)
 
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "Show Lid Angle", action: #selector(showWindowFromMenuBar), keyEquivalent: ""))
@@ -596,8 +596,25 @@ final class LidAngleViewController: NSViewController {
     }
 
     private func styleModeButton(_ button: NSButton, isSelected: Bool) {
+        let isDarkMode = view.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
         let colour: NSColor = isSelected ? .white : .labelColor
-        button.layer?.backgroundColor = (isSelected ? NSColor.systemBlue : NSColor(calibratedWhite: 0.86, alpha: 1)).cgColor
+        let backgroundColour: NSColor
+        let borderColour: NSColor
+
+        if isSelected {
+            backgroundColour = .systemBlue
+            borderColour = .clear
+        } else if isDarkMode {
+            backgroundColour = NSColor(calibratedRed: 80.0 / 255.0, green: 80.0 / 255.0, blue: 84.0 / 255.0, alpha: 1)
+            borderColour = NSColor(calibratedRed: 99.0 / 255.0, green: 99.0 / 255.0, blue: 102.0 / 255.0, alpha: 1)
+        } else {
+            backgroundColour = NSColor(calibratedWhite: 0.86, alpha: 1)
+            borderColour = .clear
+        }
+
+        button.layer?.backgroundColor = backgroundColour.cgColor
+        button.layer?.borderColor = borderColour.cgColor
+        button.layer?.borderWidth = isSelected || !isDarkMode ? 0 : 1
         button.layer?.cornerRadius = 6
         button.layer?.masksToBounds = true
         button.contentTintColor = colour
