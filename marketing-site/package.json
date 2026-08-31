@@ -1,5 +1,5 @@
 {
-  "name": "lid-angle-site",
+  "name": "lid-angle-marketing-site",
   "private": true,
   "scripts": {
     "build": "node build.mjs"

@@ -58,6 +58,12 @@ add it again.
 
 The sensor was introduced on the 2019 16-inch MacBook Pro and is present on various newer MacBook Pro and MacBook Air models. Compatibility depends on whether the Mac exposes the HID lid angle sensor to apps. If your Mac does not expose this HID device, the app will show an unavailable state rather than crashing.
 
+## Companion website
+
+The public companion website lives in `marketing-site/` and has its own build
+entry point. It is separate from the native macOS application but remains part
+of this repository.
+
 ## Documentation
 
 - [Project instructions](AGENTS.md)

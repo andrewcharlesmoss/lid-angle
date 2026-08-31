@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.0.8 — 2026-08-31
+
 ### Added
 
 - Added a repeatable local app bundle for testing changes in the Dock without downloading a release.
