@@ -16,6 +16,7 @@
 ### Fixed
 
 - Darkened the inactive display mode button in dark mode while preserving its light-mode appearance.
+- Kept the window background in sync with the system appearance when switching between light and dark mode.
 
 ## 1.0.7 — 2026-08-17
 

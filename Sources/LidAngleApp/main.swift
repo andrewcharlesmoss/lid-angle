@@ -229,9 +229,7 @@ final class LidAngleViewController: NSViewController {
     private var lastCreakTime: TimeInterval = 0
 
     override func loadView() {
-        view = NSView()
-        view.wantsLayer = true
-        view.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+        view = AppBackgroundView()
 
         titleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         titleLabel.alignment = .center
@@ -625,6 +623,13 @@ final class LidAngleViewController: NSViewController {
                 .foregroundColor: colour
             ]
         )
+    }
+}
+
+private final class AppBackgroundView: NSView {
+    override func draw(_ dirtyRect: NSRect) {
+        NSColor.windowBackgroundColor.setFill()
+        dirtyRect.fill()
     }
 }
 
