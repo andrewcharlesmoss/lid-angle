@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Changed
+
+- Verify release tests, tag, changelog, runtime About metadata and packaged ZIP
+  before uploading; preserve existing release assets instead of replacing them.
+
+### Fixed
+
+- Use one version and identity source for local and release app bundles, with
+  About values read from the actual bundle metadata.
+
 ## 1.0.8 — 2026-08-31
 
 ### Added

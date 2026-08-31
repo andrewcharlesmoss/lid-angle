@@ -2,6 +2,22 @@ import AppKit
 import Foundation
 import IOKit.hid
 
+struct AppVersion: Codable, Equatable {
+    let version: String
+    let build: String
+    let identifier: String
+
+    static var current: AppVersion {
+        AppVersion(info: Bundle.main.infoDictionary ?? [:])
+    }
+
+    init(info: [String: Any]) {
+        version = info["CFBundleShortVersionString"] as? String ?? "Development"
+        build = info["CFBundleVersion"] as? String ?? "local"
+        identifier = info["CFBundleIdentifier"] as? String ?? "unbundled"
+    }
+}
+
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMenuDelegate {
     private var window: NSWindow!
@@ -83,9 +99,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
     }
 
     @objc private func showAboutPanel() {
+        let version = AppVersion.current
         NSApp.orderFrontStandardAboutPanel(options: [
-            .applicationVersion: "1.0.8",
-            .version: "8",
+            .applicationVersion: version.version,
+            .version: version.build,
             NSApplication.AboutPanelOptionKey(rawValue: "Copyright"): "© 2026 Andrew Moss"
         ])
         NSApp.activate(ignoringOtherApps: true)
@@ -923,6 +940,11 @@ private func printOneShotReading() {
 @main
 struct LidAngleApplication {
     static func main() {
+        if CommandLine.arguments.contains("--release-metadata") {
+            let data = try! JSONEncoder().encode(AppVersion.current)
+            print(String(decoding: data, as: UTF8.self))
+            return
+        }
         if CommandLine.arguments.contains("--once") {
             printOneShotReading()
             return

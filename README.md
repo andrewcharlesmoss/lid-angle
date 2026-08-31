@@ -56,7 +56,53 @@ rule. Add this local app to the Dock once, then rerun the command and reopen it
 after each change. If macOS keeps an old icon, remove this local Dock item and
 add it again.
 
+Local and release bundles use the canonical version, build number and bundle
+identifier in `Resources/Info.plist`. The About panel reads the actual bundle
+metadata; an unbundled `swift run` build is labelled Development rather than
+claiming a release version. Set `LID_ANGLE_LOCAL_OUTPUT_DIRECTORY` to use a
+separate local preview directory.
+
 The sensor was introduced on the 2019 16-inch MacBook Pro and is present on various newer MacBook Pro and MacBook Air models. Compatibility depends on whether the Mac exposes the HID lid angle sensor to apps. If your Mac does not expose this HID device, the app will show an unavailable state rather than crashing.
+
+## Release verification
+
+Run these checks from the project root before creating a release tag:
+
+```sh
+swift test
+python3 -B -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/verify-release.py --tag v1.0.8
+swift build -c release
+```
+
+Replace the example tag with the intended release. Update the canonical plist
+and the matching dated changelog entry together. The release workflow checks
+the tag against the checked-out commit, runs both test suites, verifies the
+compiled app's About metadata, and inspects the ZIP before uploading. It does
+not overwrite an existing release asset.
+
+On a Command Line Tools installation that reports `no such module 'Testing'`,
+the installed framework may need explicit search paths. The following local
+invocation uses the existing libraries without changing the selected toolchain:
+
+```sh
+swift test \
+  -Xswiftc -F -Xswiftc /Library/Developer/CommandLineTools/Library/Developer/Frameworks \
+  -Xlinker -F -Xlinker /Library/Developer/CommandLineTools/Library/Developer/Frameworks \
+  -Xlinker -rpath -Xlinker /Library/Developer/CommandLineTools/Library/Developer/Frameworks \
+  -Xlinker -rpath -Xlinker /Library/Developer/CommandLineTools/Library/Developer/usr/lib
+```
+
+To package without publishing or replacing an existing app:
+
+```sh
+preview_directory=$(mktemp -d /tmp/lid-angle-package.XXXXXX)
+bash scripts/package-app.sh "$preview_directory"
+```
+
+This signs the app ad hoc and verifies the signature and runtime metadata.
+The main window, About panel and supported-device sensor behaviour still need
+manual inspection before a release; metadata checks do not replace those checks.
 
 ## Companion website
 

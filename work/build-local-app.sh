@@ -3,7 +3,7 @@
 set -euo pipefail
 
 project_root=${0:A:h:h}
-output_directory="$project_root/outputs/local"
+output_directory="${LID_ANGLE_LOCAL_OUTPUT_DIRECTORY:-$project_root/outputs/local}"
 app_path="$output_directory/Lid Angle Local.app"
 temporary_directory=""
 previous_directory=""
@@ -24,37 +24,7 @@ mkdir -p "$output_directory"
 temporary_directory=$(mktemp -d "$output_directory/.lid-angle-local-build.XXXXXX")
 temporary_app="$temporary_directory/Lid Angle Local.app"
 
-mkdir -p "$temporary_app/Contents/MacOS" "$temporary_app/Contents/Resources"
-cp -X "$project_root/.build/release/LidAngleApp" "$temporary_app/Contents/MacOS/LidAngleApp"
-cp -X "$project_root/Resources/AppIcon.icns" "$temporary_app/Contents/Resources/AppIcon.icns"
-cp -X "$project_root/Resources/DoorCreak.wav" "$temporary_app/Contents/Resources/DoorCreak.wav"
-
-cat > "$temporary_app/Contents/Info.plist" <<'PLIST'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>CFBundleDisplayName</key>
-    <string>Lid Angle</string>
-    <key>CFBundleExecutable</key>
-    <string>LidAngleApp</string>
-    <key>CFBundleIconFile</key>
-    <string>AppIcon</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.andrewmoss.lid-angle</string>
-    <key>CFBundleName</key>
-    <string>Lid Angle</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.0.8</string>
-    <key>CFBundleVersion</key>
-    <string>8</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>14.0</string>
-</dict>
-</plist>
-PLIST
+bash scripts/package-app.sh "$temporary_directory" "Lid Angle Local.app"
 
 if [[ -d "$app_path" ]]; then
     previous_directory=$(mktemp -d "$output_directory/.lid-angle-local-previous.XXXXXX")
@@ -64,10 +34,6 @@ fi
 mv "$temporary_app" "$app_path"
 rmdir "$temporary_directory"
 temporary_directory=""
-
-xattr -cr "$app_path"
-codesign --force --deep --sign - "$app_path"
-codesign --verify --deep --strict "$app_path"
 
 if [[ -n "$previous_directory" ]]; then
     rm -rf "$previous_directory"
