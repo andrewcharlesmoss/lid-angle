@@ -30,3 +30,15 @@ Lid Angle is a native macOS app that reads the MacBook lid-angle HID sensor and
   after UI changes.
 - Preserve the documented Gatekeeper and non-notarised release notice unless
   the distribution process changes.
+
+## Git and deployment mapping
+
+- The native app repository currently has only `main`; use `Local → Main` for
+  app releases and keep packaging, signing and distribution as separate steps.
+- The `marketing-site/` child project has its own tracked Sites hosting binding
+  and currently also uses `main` as its production branch. Sites publishing is
+  separate from committing and pushing.
+- Verify the selected Sites target, exact source revision and deployment status
+  before publishing the marketing site. Do not infer an automatic Git trigger
+  from the hosting file; document a staging branch or target before introducing
+  one.
